@@ -1,0 +1,1 @@
+cmd_/home/yagn/Desktop/OS_project2/slave_device/slave_device.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/yagn/Desktop/OS_project2/slave_device/slave_device.ko /home/yagn/Desktop/OS_project2/slave_device/slave_device.o /home/yagn/Desktop/OS_project2/slave_device/slave_device.mod.o ;  true
