@@ -5,4 +5,4 @@ EREWRERREWRE
 method: fcntl
 write ret:32
 write ret:0
-Transmission time: 0.049300 ms, File size: 4 bytes
+Transmission time: 0.028600 ms, File size: 4 bytes

@@ -1,0 +1,18 @@
+# var1=10
+# var2=20
+# ((var1=30))
+# if [ $var2 -eq 20]
+#     then
+#         echo "$var2 is greater than $var1"
+# fi
+
+var=1
+for f in ../sample_input_1/*; do
+    echo $var
+    if [ $var -eq 2 ]
+        then
+            echo "break"
+            break
+    fi
+    ((var=var+1))
+done

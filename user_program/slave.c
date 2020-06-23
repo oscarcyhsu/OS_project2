@@ -16,7 +16,7 @@ int main (int argc, char* argv[])
 {
 	char buf[BUF_SIZE];
 	int i, dev_fd, file_fd;// the fd for the device and the fd for the input file
-	size_t ret, file_size = 0, data_size = -1;
+	size_t ret, file_size = 0, data_size = -1, offset = 0;
 	char file_name[50];
 	char method[20];
 	char ip[20];
@@ -48,7 +48,7 @@ int main (int argc, char* argv[])
 		return 1;
 	}
 	if(ioctl(dev_fd, 0x12345677, ip) == -1)	//0x12345677 : connect to master in the device
-	{
+	{char* file_address, kernel_address;
 		perror("ioctl create slave socket error\n");
 		return 1;
 	}
@@ -61,7 +61,7 @@ int main (int argc, char* argv[])
 			printf("method: fcntl\n");
 			do
 			{
-				ret = read(dev_fd, buf, sizeof(buf)); // read from the the device
+				ret = read(dev_fd, buf, sizeof(buf)); // read from the the deviceioclt
 				write(STDOUT_FILENO, buf, ret); //write to stdout
 				int tmp;
 				tmp = write(file_fd, buf, ret); //write to the input file
@@ -70,13 +70,43 @@ int main (int argc, char* argv[])
 				file_size += ret;
 			}while(ret > 0);
 			break;
+		case 'm':
+			printf("method: mmap\n");
+			while(1)
+			{
+				ret = ioctl(dev_fd, 0x12345678);
+				if (ret == 0){
+					file_size = offset;
+					break;
+				}
+				printf("inctl return: %d\n", ret);
+				printf("calling file mmap\n");
+				posix_fallocate(file_fd, offset, ret);
+				file_address = mmap(NULL, ret, PROT_WRITE, MAP_SHARED, file_fd, offset);
+				printf("calling dev mmap\n");
+				kernel_address = mmap(NULL, ret, PROT_READ, MAP_SHARED, dev_fd, offset);
+				printf("memcpy...\n");
+				// for (int i =0; i < 20; i++){
+				// 	printf(":%c",kernel_address[i]);
+				// }
+
+				memcpy(file_address, kernel_address, ret);
+				printf("calling file munmap\n");			
+				munmap(file_address, ret);
+				printf("calling file munmap\n");			
+				munmap(kernel_address, ret);
+				
+				offset += ret;
+			}
+			break;
+
 	}
 
 
 
 	if(ioctl(dev_fd, 0x12345679) == -1)// end receiving data, close the connection
 	{
-		perror("ioclt client exits error\n");
+		perror("ioctl client exits error\n");
 		return 1;
 	}
 	gettimeofday(&end, NULL);
