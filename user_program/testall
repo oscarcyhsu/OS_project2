@@ -2,11 +2,11 @@ mkdir log
 var=1
 for f in ../sample_input_1/*; do
     echo transfering ${f##*/}...
-    sudo ./master 1 ../sample_input_1/${f##*/} fcntl > log/master_${f##*/} &
+    sudo ./master 1 ../sample_input_1/${f##*/} mmap > log/master_${f##*/} &
     sudo ./slave 1 ../sample_output_1/${f##*/} mmap 127.0.0.1 
     wait
     echo $var
-    if [ $var -eq 10 ]
+    if [ $var -eq 100 ]
         then
             echo "break"
             break
@@ -18,7 +18,7 @@ done
 for f in ../sample_input_1/*; do
     echo matching ${f##*/}
     diff ../sample_input_1/${f##*/} ../sample_output_1/${f##*/}
-    if [ $var -eq 10 ]
+    if [ $var -eq 100 ]
         then
             break
     fi

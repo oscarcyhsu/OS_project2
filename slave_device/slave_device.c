@@ -31,6 +31,8 @@
 
 
 #define BUF_SIZE 512
+#define PAGE_SIZE  4096
+#define MAP_SIZE (100*PAGE_SIZE)
 
 
 
@@ -59,13 +61,38 @@ static mm_segment_t old_fs;
 static ksocket_t sockfd_cli;//socket to the master server
 static struct sockaddr_in addr_srv; //address of the master server
 
+static void mmap_open(struct vm_area_struct *vma){ }
+static void mmap_close(struct vm_area_struct *vma){ }
+// static int mmap_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
+// {
+// 	vmf->page = virt_to_page(vma->vm_private_data);
+// 	get_page(vmf->page);
+// 	return 0;
+// }
+//vm operation
+static const struct vm_operations_struct slave_vm_ops = {
+	.open = mmap_open,
+	.close = mmap_close,
+	//.fault = mmap_fault
+};
+
+static int slave_mmap(struct file *file, struct vm_area_struct *vma){
+	remap_pfn_range(vma, vma->vm_start, virt_to_phys(file->private_data) >> PAGE_SHIFT,
+					vma->vm_end - vma->vm_start, vma->vm_page_prot);
+	vma->vm_ops = &slave_vm_ops;
+	vma->vm_flags |= VM_RESERVED;
+	vma->vm_private_data = file->private_data;
+	mmap_open(vma);
+	return 0;
+}
 //file operations
 static struct file_operations slave_fops = {
 	.owner = THIS_MODULE,
 	.unlocked_ioctl = slave_ioctl,
 	.open = slave_open,
 	.read = receive_msg,
-	.release = slave_close
+	.release = slave_close,
+	.mmap = slave_mmap
 };
 
 //device info
@@ -101,11 +128,13 @@ static void __exit slave_exit(void)
 
 int slave_close(struct inode *inode, struct file *filp)
 {
+	kfree(filp->private_data);
 	return 0;
 }
 
 int slave_open(struct inode *inode, struct file *filp)
 {
+	filp->private_data = kmalloc(MAP_SIZE, GFP_KERNEL);
 	return 0;
 }
 static long slave_ioctl(struct file *file, unsigned int ioctl_num, unsigned long ioctl_param)
@@ -114,7 +143,8 @@ static long slave_ioctl(struct file *file, unsigned int ioctl_num, unsigned long
 
 	int addr_len ;
 	unsigned int i;
-	size_t len, data_size = 0;
+	size_t len;
+	size_t offset = 0;
 	char *tmp, ip[20], buf[BUF_SIZE];
 	struct page *p_print;
 	unsigned char *px;
@@ -163,7 +193,23 @@ static long slave_ioctl(struct file *file, unsigned int ioctl_num, unsigned long
 			ret = 0;
 			break;
 		case slave_IOCTL_MMAP:
-
+			offset = 0;
+			while(1)
+			{
+				len = krecv(sockfd_cli, buf, sizeof(buf), 0);
+				printk("slave ioctl received %s byte", len);
+				buf[len] = '\0';
+				printk("slave ioctl received: [%s]", buf);
+				if (len == 0)
+				{
+					break;
+				}
+				memcpy(file->private_data + offset, buf, len);
+				printk("file->private_data: [%s]", file->private_data);
+				printk("write received data to file->private_data done\n");
+				offset += len;
+			}
+			ret = offset;
 			break;
 
 		case slave_IOCTL_EXIT:

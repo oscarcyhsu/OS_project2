@@ -29,6 +29,8 @@
 #define master_IOCTL_MMAP 0x12345678
 #define master_IOCTL_EXIT 0x12345679
 #define BUF_SIZE 512
+#define PAGE_SIZE  4096
+#define MAP_SIZE (100*PAGE_SIZE)
 
 typedef struct socket * ksocket_t;
 
@@ -58,13 +60,32 @@ static mm_segment_t old_fs;
 static int addr_len;
 //static  struct mmap_info *mmap_msg; // pointer to the mapped data in this device
 
+static void mmap_open(struct vm_area_struct *vma){ }
+static void mmap_close(struct vm_area_struct *vma){ }
+
+static const struct vm_operations_struct slave_vm_ops = {
+	.open = mmap_open,
+	.close = mmap_close,
+};
+
+static int master_mmap(struct file *file, struct vm_area_struct *vma){
+	remap_pfn_range(vma, vma->vm_start, virt_to_phys(file->private_data) >> PAGE_SHIFT,
+					vma->vm_end - vma->vm_start, vma->vm_page_prot);
+	vma->vm_ops = &slave_vm_ops;
+	vma->vm_flags |= VM_RESERVED;
+	vma->vm_private_data = file->private_data;
+	mmap_open(vma);
+	return 0;
+}
+
 //file operations
 static struct file_operations master_fops = {
 	.owner = THIS_MODULE,
 	.unlocked_ioctl = master_ioctl,
 	.open = master_open,
 	.write = send_msg,
-	.release = master_close
+	.release = master_close,
+	.mmap = master_mmap
 };
 
 //device info
@@ -137,11 +158,13 @@ static void __exit master_exit(void)
 
 int master_close(struct inode *inode, struct file *filp)
 {
+	kfree(filp->private_data);
 	return 0;
 }
 
 int master_open(struct inode *inode, struct file *filp)
 {
+	filp->private_data = kmalloc(MAP_SIZE, GFP_KERNEL);
 	return 0;
 }
 
@@ -175,6 +198,7 @@ static long master_ioctl(struct file *file, unsigned int ioctl_num, unsigned lon
 			ret = 0;
 			break;
 		case master_IOCTL_MMAP:
+			ret = ksend(sockfd_cli, file->private_data, ioctl_param, 0);
 			break;
 		case master_IOCTL_EXIT:
 			if(kclose(sockfd_cli) == -1)
