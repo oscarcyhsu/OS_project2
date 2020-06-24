@@ -92,7 +92,10 @@ int main (int argc, char* argv[])
 					posix_fallocate(file_fd, offset, ret);
 					file_address = mmap(NULL, ret, PROT_WRITE, MAP_SHARED, file_fd, offset);
 					kernel_address = mmap(NULL, ret, PROT_READ, MAP_SHARED, dev_fd, offset);
-
+					if (offset == 0){ // printk page descriptor
+						ioctl(dev_fd, 0x00000000, kernel_address);
+					}
+					
 					memcpy(file_address, kernel_address, ret);
 		
 					munmap(file_address, ret);	
@@ -123,8 +126,7 @@ int main (int argc, char* argv[])
     
 	gettimeofday(&end, NULL);
 	trans_time = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec)*0.0001;
-	// printf("Transmission time: %lf ms, File size: %d bytes\n", trans_time, total_file_size);
-	printf("%lf\n", trans_time);
+	printf("Transmission time: %lf ms, File size: %d bytes\n", trans_time, total_file_size);
 
 
 	

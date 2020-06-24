@@ -1,21 +1,23 @@
-# testing data: sample_input1, master: mmap, slave: fcntl
-sudo ./master 10 ../sample_input_1/target_file_1 ../sample_input_1/target_file_2 ../sample_input_1/target_file_3 \
-../sample_input_1/target_file_4 ../sample_input_1/target_file_5 ../sample_input_1/target_file_6 \
-../sample_input_1/target_file_7 ../sample_input_1/target_file_8 ../sample_input_1/target_file_9 \
-../sample_input_1/target_file_10 mmap >> log/master/test1_mf &
-sudo ./slave 10 ../sample_output_1/target_file_1 ../sample_output_1/target_file_2 ../sample_output_1/target_file_3 \
-../sample_output_1/target_file_4 ../sample_output_1/target_file_5 ../sample_output_1/target_file_6 \
-../sample_output_1/target_file_7 ../sample_output_1/target_file_8 ../sample_output_1/target_file_9 \
-../sample_output_1/target_file_10 fcntl 127.0.0.1  >> log/slave/test1_mf
+# testing data: input/sample_input1, master: mmap, slave: fcntl
+rm -f ../output/sampple_output_1/*
+
+sudo ./master 10 ../input/sample_input_1/target_file_1 ../input/sample_input_1/target_file_2 ../input/sample_input_1/target_file_3 \
+../input/sample_input_1/target_file_4 ../input/sample_input_1/target_file_5 ../input/sample_input_1/target_file_6 \
+../input/sample_input_1/target_file_7 ../input/sample_input_1/target_file_8 ../input/sample_input_1/target_file_9 \
+../input/sample_input_1/target_file_10 mmap >> ../output/TimeSize/master/test1_mf &
+sudo ./slave 10 ../output/sample_output_1/target_file_1 ../output/sample_output_1/target_file_2 ../output/sample_output_1/target_file_3 \
+../output/sample_output_1/target_file_4 ../output/sample_output_1/target_file_5 ../output/sample_output_1/target_file_6 \
+../output/sample_output_1/target_file_7 ../output/sample_output_1/target_file_8 ../output/sample_output_1/target_file_9 \
+../output/sample_output_1/target_file_10 fcntl 127.0.0.1  >> ../output/TimeSize/slave/test1_mf
 wait
 
-diff ../sample_input_1/target_file_1 ../sample_output_1/target_file_1
-diff ../sample_input_1/target_file_2 ../sample_output_1/target_file_2
-diff ../sample_input_1/target_file_3 ../sample_output_1/target_file_3
-diff ../sample_input_1/target_file_4 ../sample_output_1/target_file_4
-diff ../sample_input_1/target_file_5 ../sample_output_1/target_file_5
-diff ../sample_input_1/target_file_6 ../sample_output_1/target_file_6
-diff ../sample_input_1/target_file_7 ../sample_output_1/target_file_7
-diff ../sample_input_1/target_file_8 ../sample_output_1/target_file_8
-diff ../sample_input_1/target_file_9 ../sample_output_1/target_file_9
-diff ../sample_input_1/target_file_10 ../sample_output_1/target_file_10
+diff ../input/sample_input_1/target_file_1 ../output/sample_output_1/target_file_1
+diff ../input/sample_input_1/target_file_2 ../output/sample_output_1/target_file_2
+diff ../input/sample_input_1/target_file_3 ../output/sample_output_1/target_file_3
+diff ../input/sample_input_1/target_file_4 ../output/sample_output_1/target_file_4
+diff ../input/sample_input_1/target_file_5 ../output/sample_output_1/target_file_5
+diff ../input/sample_input_1/target_file_6 ../output/sample_output_1/target_file_6
+diff ../input/sample_input_1/target_file_7 ../output/sample_output_1/target_file_7
+diff ../input/sample_input_1/target_file_8 ../output/sample_output_1/target_file_8
+diff ../input/sample_input_1/target_file_9 ../output/sample_output_1/target_file_9
+diff ../input/sample_input_1/target_file_10 ../output/sample_output_1/target_file_10

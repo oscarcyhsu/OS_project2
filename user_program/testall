@@ -1,18 +1,18 @@
-#rm -f log/master/*
-#rm -f log/slave/*
-rm -f ../sample_output_1/*
+rm -f ../output/TimeSize/master/*
+rm -f ../output/TimeSize/slave/*
+rm -f ../output/sampple_output_1/*
 sudo ./test1_mm
-rm -f ../sample_output_1/*
+rm -f ../output/sampple_output_1/*
 sudo ./test1_mf
-rm -f ../sample_output_1/*
+rm -f ../output/sampple_output_1/*
 sudo ./test1_fm
-rm -f ../sample_output_1/*
+rm -f ../output/sampple_output_1/*
 sudo ./test1_ff
-rm -f ../sample_output_2/*
+rm -f ../output/sampple_output_2/*
 sudo ./test2_mm
-rm -f ../sample_output_2/*
+rm -f ../output/sampple_output_2/*
 sudo ./test2_mf
-rm -f ../sample_output_2/*
+rm -f ../output/sampple_output_2/*
 sudo ./test2_fm
-rm -f ../sample_output_2/*
+rm -f ../output/sampple_output_2/*
 sudo ./test2_ff

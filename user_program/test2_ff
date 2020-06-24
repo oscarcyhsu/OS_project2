@@ -1,7 +1,9 @@
-# testing data: sample_input2, master: fcntl, slave: fcntl
-sudo ./master 1 ../sample_input_2/target_file  fcntl >> log/master/test2_ff &
-sudo ./slave 1 ../sample_output_2/target_file  fcntl 127.0.0.1 >> log/slave/test2_ff
+# testing data: input/sample_input2, master: fcntl, slave: fcntl
+rm -f ../output/sampple_output_2/*
+
+sudo ./master 1 ../input/sample_input_2/target_file  fcntl >> ../output/TimeSize/master/test2_ff &
+sudo ./slave 1 ../output/sample_output_2/target_file  fcntl 127.0.0.1 >> ../output/TimeSize/slave/test2_ff
 wait
 
 
-diff ../sample_input_2/target_file ../sample_output_2/target_file
+diff ../input/sample_input_2/target_file ../output/sample_output_2/target_file
