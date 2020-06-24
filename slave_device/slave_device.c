@@ -197,17 +197,21 @@ static long slave_ioctl(struct file *file, unsigned int ioctl_num, unsigned long
 			while(1)
 			{
 				len = krecv(sockfd_cli, buf, sizeof(buf), 0);
-				printk("slave ioctl received %s byte", len);
+				//printk("slave ioctl received %s byte", len);
 				buf[len] = '\0';
-				printk("slave ioctl received: [%s]", buf);
+				//printk("slave ioctl received: [%s]", buf);
 				if (len == 0)
 				{
 					break;
 				}
 				memcpy(file->private_data + offset, buf, len);
-				printk("file->private_data: [%s]", file->private_data);
-				printk("write received data to file->private_data done\n");
+				//printk("file->private_data: [%s]", file->private_data);
+				//printk("write received data to file->private_data done\n");
 				offset += len;
+				if (offset + sizeof(buf) > MAP_SIZE)
+				{
+					break;
+				}
 			}
 			ret = offset;
 			break;

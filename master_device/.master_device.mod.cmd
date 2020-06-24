@@ -1,0 +1,1 @@
+cmd_/home/yagn/Desktop/OS_project2/master_device/master_device.mod := { echo  /home/yagn/Desktop/OS_project2/master_device/master_device.o; echo; } > /home/yagn/Desktop/OS_project2/master_device/master_device.mod

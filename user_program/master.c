@@ -83,8 +83,8 @@ int main (int argc, char* argv[])
 				file_address = mmap(NULL, map_length, PROT_READ, MAP_SHARED, file_fd, offset);
 				kernel_address = mmap(NULL, map_length, PROT_WRITE, MAP_SHARED, dev_fd, offset);
 				memcpy(kernel_address, file_address, map_length);
-				munmap(file_address, map_length);
-				munmap(kernel_address, map_length);
+				// munmap(file_address, map_length);
+				// munmap(kernel_address, map_length);
 				offset += map_length;
 				ioctl(dev_fd, 0x12345678, map_length);
 			}
@@ -98,7 +98,7 @@ int main (int argc, char* argv[])
 	}
 	gettimeofday(&end, NULL);
 	trans_time = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec)*0.0001;
-	printf("Transmission time: %lf ms, File size: %d bytes\n", trans_time, file_size / 8);
+	printf("Transmission time: %lf ms, File size: %d bytes\n", trans_time, file_size);
 
 	close(file_fd);
 	close(dev_fd);

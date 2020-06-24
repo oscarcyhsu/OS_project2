@@ -62,7 +62,7 @@ int main (int argc, char* argv[])
 			do
 			{
 				ret = read(dev_fd, buf, sizeof(buf)); // read from the the deviceioclt
-				write(STDOUT_FILENO, buf, ret); //write to stdout
+				//write(STDOUT_FILENO, buf, ret); //write to stdout
 				int tmp;
 				tmp = write(file_fd, buf, ret); //write to the input file
 				printf("write ret:%d\n", tmp);
@@ -79,21 +79,21 @@ int main (int argc, char* argv[])
 					file_size = offset;
 					break;
 				}
-				printf("inctl return: %d\n", ret);
-				printf("calling file mmap\n");
+				printf("ioctl return: %d\n", ret);
+				//printf("calling file mmap\n");
 				posix_fallocate(file_fd, offset, ret);
 				file_address = mmap(NULL, ret, PROT_WRITE, MAP_SHARED, file_fd, offset);
-				printf("calling dev mmap\n");
+				//printf("calling dev mmap\n");
 				kernel_address = mmap(NULL, ret, PROT_READ, MAP_SHARED, dev_fd, offset);
-				printf("memcpy...\n");
+				//printf("memcpy...\n");
 				// for (int i =0; i < 20; i++){
 				// 	printf(":%c",kernel_address[i]);
 				// }
 
 				memcpy(file_address, kernel_address, ret);
-				printf("calling file munmap\n");			
+				//printf("calling file munmap\n");			
 				munmap(file_address, ret);
-				printf("calling file munmap\n");			
+				//printf("calling file munmap\n");			
 				munmap(kernel_address, ret);
 				
 				offset += ret;

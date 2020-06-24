@@ -12,6 +12,6 @@
 # cd ..
 
 
-rmmod ksocket.ko
 rmmod master_device.ko
 rmmod slave_device.ko
+rmmod ksocket.ko
