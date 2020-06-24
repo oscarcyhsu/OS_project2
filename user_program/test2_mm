@@ -1,0 +1,6 @@
+# testing data: sample_input2, master: mmap, slave: mmap
+sudo ./master 1 ../sample_input_2/target_file  mmap > log/master/test2_mm &
+sudo ./slave 1 ../sample_output_2/target_file  mmap 127.0.0.1 > log/slave/test2_mm
+
+
+diff ../sample_input_2/target_file ../sample_output_2/target_file

@@ -1,0 +1,6 @@
+# testing data: sample_input2, master: fcntl, slave: mmap
+sudo ./master 1 ../sample_input_2/target_file  fcntl > log/master/test2_fm &
+sudo ./slave 1 ../sample_output_2/target_file  mmap 127.0.0.1 > log/slave/test2_fm
+
+
+diff ../sample_input_2/target_file ../sample_output_2/target_file

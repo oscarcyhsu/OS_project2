@@ -1,27 +1,16 @@
-mkdir log
-var=1
-for f in ../sample_input/*; do
-    echo transfering ${f##*/}...
-    sudo ./master 1 ../sample_input/${f##*/} mmap > log/master_${f##*/} &
-    sudo ./slave 1 ../sample_output_1/${f##*/} mmap 127.0.0.1 
-    wait
-    echo $var
-    if [ $var -eq 100 ]
-        then
-            echo "break"
-            break
-    fi
-    ((var=var+1))
-done
-
-((var=0))
-for f in ../sample_input/*; do
-    echo matching ${f##*/}
-    diff ../sample_input/${f##*/} ../sample_output_1/${f##*/}
-    if [ $var -eq 100 ]
-        then
-            break
-    fi
-    ((var=var+1))
-done
-
+rm -f ../sample_output_1/*
+sudo ./test1_mm
+rm -f ../sample_output_1/*
+sudo ./test1_mf
+rm -f ../sample_output_1/*
+sudo ./test1_fm
+rm -f ../sample_output_1/*
+sudo ./test1_ff
+rm -f ../sample_output_2/*
+sudo ./test2_mm
+rm -f ../sample_output_2/*
+sudo ./test2_mf
+rm -f ../sample_output_2/*
+sudo ./test2_fm
+rm -f ../sample_output_2/*
+sudo ./test2_ff
