@@ -1,21 +1,10 @@
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-method: fcntl
-method: fcntl
-method: fcntl
-method: fcntl
-method: fcntl
-method: fcntl
-method: fcntl
-method: fcntl
-method: fcntl
-method: fcntl
-Transmission time: 0.307000 ms, File size: 93350 bytes
+0.279800
+0.139600
+0.359200
+0.421900
+0.394600
+0.265300
+0.376000
+0.277800
+0.331000
+0.290300

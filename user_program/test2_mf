@@ -1,6 +1,7 @@
 # testing data: sample_input2, master: mmap, slave: fcntl
-sudo ./master 1 ../sample_input_2/target_file  mmap > log/master/test2_mf &
-sudo ./slave 1 ../sample_output_2/target_file  fcntl 127.0.0.1 > log/slave/test2_mf
+sudo ./master 1 ../sample_input_2/target_file  mmap >> log/master/test2_mf &
+sudo ./slave 1 ../sample_output_2/target_file  fcntl 127.0.0.1 >> log/slave/test2_mf
+wait
 
 
 diff ../sample_input_2/target_file ../sample_output_2/target_file

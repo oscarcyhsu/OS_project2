@@ -60,12 +60,13 @@ int main (int argc, char* argv[])
 			perror("ioctl create slave socket error\n");
 			return 1;
 		}
-		write(1, "ioctl success\n", 14);
+		//write(1, "ioctl success\n", 14);
 
 		switch(method[0])
 		{
 			case 'f'://fcntl : read()/write()
-				printf("method: fcntl\n");
+				//printf("method: fcntl\n");
+				file_size = 0;
 				do
 				{
 					ret = read(dev_fd, buf, sizeof(buf)); // read from the the deviceioclt
@@ -78,7 +79,7 @@ int main (int argc, char* argv[])
 				}while(ret > 0);
 				break;
 			case 'm':
-				printf("method: mmap\n");
+				//printf("method: mmap\n");
 				offset = 0;
 				while(1)
 				{
@@ -87,21 +88,14 @@ int main (int argc, char* argv[])
 						file_size = offset;
 						break;
 					}
-					//printf("ioctl return: %d\n", ret);
-					//printf("calling file mmap\n");
+
 					posix_fallocate(file_fd, offset, ret);
 					file_address = mmap(NULL, ret, PROT_WRITE, MAP_SHARED, file_fd, offset);
-					//printf("calling dev mmap\n");
 					kernel_address = mmap(NULL, ret, PROT_READ, MAP_SHARED, dev_fd, offset);
-					//printf("memcpy...\n");
-					// for (int i =0; i < 20; i++){
-					// 	printf(":%c",kernel_address[i]);
-					// }
 
 					memcpy(file_address, kernel_address, ret);
-					//printf("calling file munmap\n");			
-					munmap(file_address, ret);
-					//printf("calling file munmap\n");			
+		
+					munmap(file_address, ret);	
 					munmap(kernel_address, ret);
 					
 					offset += ret;
@@ -129,7 +123,8 @@ int main (int argc, char* argv[])
     
 	gettimeofday(&end, NULL);
 	trans_time = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec)*0.0001;
-	printf("Transmission time: %lf ms, File size: %d bytes\n", trans_time, total_file_size);
+	// printf("Transmission time: %lf ms, File size: %d bytes\n", trans_time, total_file_size);
+	printf("%lf\n", trans_time);
 
 
 	

@@ -1,8 +1,0 @@
-ioctl success
-GEFEWFEWFGREGGEWG
-EREWRERREWRE
-
-method: fcntl
-write ret:32
-write ret:0
-Transmission time: 0.028600 ms, File size: 4 bytes

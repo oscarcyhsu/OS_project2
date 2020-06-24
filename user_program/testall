@@ -1,3 +1,5 @@
+#rm -f log/master/*
+#rm -f log/slave/*
 rm -f ../sample_output_1/*
 sudo ./test1_mm
 rm -f ../sample_output_1/*

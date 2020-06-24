@@ -1,21 +1,10 @@
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-ioctl success
-method: mmap
-method: mmap
-method: mmap
-method: mmap
-method: mmap
-method: mmap
-method: mmap
-method: mmap
-method: mmap
-method: mmap
-Transmission time: 0.313200 ms, File size: 24146 bytes
+0.578000
+0.266000
+0.246800
+0.314400
+0.221600
+0.223000
+0.221700
+0.286700
+0.216000
+0.162700
